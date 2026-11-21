@@ -1,0 +1,293 @@
+<title>كم يستاهل؟</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=Readex+Pro:wght@500;700&display=swap">
+<style>
+/* Layout: one narrow column like a workshop receipt — choose car + job, read the fair range, check your quote. */
+:root{
+  --bg:#f3f4f2; --surface:#ffffff; --ink:#1d2326; --muted:#5d686d; --line:#dde1de;
+  --accent:#d98a1c; --accent-ink:#5a3800; --accent-soft:#fbefdc;
+  --good:#1f7a4d; --good-soft:#e3f3ea; --warn:#a96b00; --warn-soft:#fdf1d8; --bad:#b3362b; --bad-soft:#fbe6e3;
+  --chip:#eceeec;
+  --f-display:"Readex Pro","IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-body:"IBM Plex Sans Arabic",Tahoma,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15191b; --surface:#1e2427; --ink:#e9ecea; --muted:#9aa5a9; --line:#2f373a;
+  --accent:#f0a43a; --accent-ink:#ffe3b8; --accent-soft:#3a2c17;
+  --good:#5cc690; --good-soft:#173527; --warn:#e8b04a; --warn-soft:#3a2e14; --bad:#f07a6e; --bad-soft:#3d1e1b;
+  --chip:#283033; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#15191b; --surface:#1e2427; --ink:#e9ecea; --muted:#9aa5a9; --line:#2f373a;
+  --accent:#f0a43a; --accent-ink:#ffe3b8; --accent-soft:#3a2c17;
+  --good:#5cc690; --good-soft:#173527; --warn:#e8b04a; --warn-soft:#3a2e14; --bad:#f07a6e; --bad-soft:#3d1e1b;
+  --chip:#283033; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.65}
+.wrap{max-width:720px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-direction:column;gap:6px}
+.brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,6vw,40px);margin:0;letter-spacing:0;text-wrap:balance}
+h1 span{color:var(--accent)}
+.tag{font-size:12px;padding:2px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+.lede{margin:0;color:var(--muted);max-width:60ch}
+h2{font-family:var(--f-display);font-weight:500;font-size:16px;margin:0}
+section.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--chip);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.chip:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ask{display:flex;gap:8px;flex-wrap:wrap}
+textarea,input[type=number]{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+textarea{flex:1 1 260px;min-height:46px;resize:vertical}
+.btn{font:inherit;font-weight:600;border:0;border-radius:10px;padding:10px 18px;background:var(--accent);color:#231600;cursor:pointer}
+.btn:disabled{opacity:.6;cursor:default}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.result-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.pill{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--bad-soft);color:var(--bad)}
+.fair{display:flex;flex-direction:column;gap:2px;padding:14px;border-radius:12px;background:var(--accent-soft)}
+.fair .lbl{font-size:13px;color:var(--accent-ink)}
+.fair .num{font-family:var(--f-display);font-weight:700;font-size:clamp(26px,7vw,36px);font-variant-numeric:tabular-nums;color:var(--ink)}
+.fair .num small{font-size:15px;font-weight:500;color:var(--muted)}
+.fair .note{font-size:13px;color:var(--muted)}
+.rows{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:10px 0;border-top:1px dashed var(--line)}
+.row:first-child{border-top:0}
+.row .k{color:var(--muted);font-size:14px}
+.row .v{min-width:0;display:flex;flex-direction:column;gap:4px}
+.item{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.price{font-weight:600;font-variant-numeric:tabular-nums}
+.desc{color:var(--muted);font-size:13.5px}
+.src{font-size:12.5px;color:var(--accent-ink);text-decoration:underline;text-underline-offset:2px}
+:root[data-theme="dark"] .src{color:var(--accent)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .src{color:var(--accent)}}
+.flag{font-size:11.5px;padding:1px 7px;border-radius:6px;background:var(--chip);color:var(--muted)}
+.flag.old{background:var(--bad-soft);color:var(--bad)}
+.flag.est{background:var(--warn-soft);color:var(--warn)}
+.none{color:var(--muted);font-size:14px}
+.check{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.check input{width:160px}
+.verdict{border-radius:12px;padding:12px 14px;font-weight:500}
+.verdict.good{background:var(--good-soft);color:var(--good)} .verdict.warn{background:var(--warn-soft);color:var(--warn)} .verdict.bad{background:var(--bad-soft);color:var(--bad)} .verdict.info{background:var(--chip);color:var(--ink)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.fact{border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.fact b{font-family:var(--f-display);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums}
+.fact span{font-size:13.5px;color:var(--muted)}
+footer{font-size:12.5px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
+@media (max-width:480px){.row{grid-template-columns:1fr;gap:4px}}
+@media (prefers-reduced-motion:no-preference){.fair,.verdict{transition:background .2s}}
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <div class="brand"><h1>كم <span>يستاهل؟</span></h1><span class="tag">نسخة تجريبية · الرياض</span></div>
+    <p class="lede">اعرف السعر العادل لصيانة سيارتك قبل ما تدفع. كل رقم هنا جمعه وكيل ذكي من صفحات حقيقية، ومعه مصدره.</p>
+  </header>
+
+  <section class="card" id="askCard" hidden>
+    <h2>وش مشكلة سيارتك؟</h2>
+    <div class="ask">
+      <textarea id="askText" placeholder="مثال: الكامري حقتي الفرامل تصفّر والورشة تبي ٥٠٠"></textarea>
+      <button class="btn" id="askBtn" type="button">افهمها</button>
+    </div>
+    <p class="hint" id="askHint">اكتب بلهجتك، والذكاء الاصطناعي يحدد السيارة والشغلة والسعر اللي عُرض عليك.</p>
+  </section>
+
+  <section class="card">
+    <h2>السيارة</h2>
+    <div class="chips" id="cars"></div>
+    <h2>الشغلة</h2>
+    <div class="chips" id="jobs"></div>
+  </section>
+
+  <section class="card" id="result" aria-live="polite"></section>
+
+  <section class="card">
+    <h2>عندك عرض سعر؟ افحصه</h2>
+    <div class="check">
+      <input type="number" id="quote" inputmode="numeric" min="0" placeholder="المبلغ بالريال">
+      <button class="btn" id="checkBtn" type="button">افحص السعر</button>
+    </div>
+    <div id="verdict" class="verdict info" hidden></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:10px">
+    <h2>هل تعرف؟ فروقات حقيقية لقيناها</h2>
+    <div class="facts">
+      <div class="fact"><b>٣٢ ↔ ٧٠ ﷼</b><span>نفس فلتر الكامري الأصلي 90915-10009: حراج مقابل أمازون.</span></div>
+      <div class="fact"><b>٧٤٩ ﷼</b><span>باقة فحمات هايلكس في الوكالة، والسوق العام ١٠٠–٤٠٠ (الباقة تشمل خراطة الهوبات).</span></div>
+      <div class="fact"><b>٣٥ ↔ ٦٤ ﷼</b><span>فلتر أكسنت: الأصلي أرخص من التجاري. التجاري مو دايم أرخص.</span></div>
+      <div class="fact"><b>٤٣٪</b><span>فرق سعر لتر زيت Mobil 0W-20 بين شراء اللتر وشراء الكرتون.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>بيانات النسخة التجريبية جُمعت في ٢٠–٢١ نوفمبر ٢٠٢٦ من مواقع منشورة. الأسعار تتغير، فراجع المصدر قبل الشراء.</span>
+    <span>«تقدير» يعني رقماً محسوباً من أسعار منشورة، وليس عرض سعر. أجرة اليد غير منشورة في أغلب الورش، ونجمعها لاحقاً من فواتير المستخدمين.</span>
+    <span>هذه أداة معلومات فقط، ولا تقيّم ورشة بعينها.</span>
+  </footer>
+</div>
+
+<script>
+const S = {
+  haraj32:{t:"حراج", u:"https://haraj.com.sa/11192515243/"},
+  syCamry:{t:"سيارة (مقال، غير رسمي)", u:"https://syarah.com/carsguide/toyota-camry-2026-maintenance/"},
+  syOil:{t:"سيارة: مراكز الزيت بالرياض", u:"https://syarah.com/carsguide/top-oil-change-centers-riyadh/"},
+  syBrake:{t:"سيارة: تغيير الفحمات", u:"https://syarah.com/carsguide/change-car-brake-pads/"},
+  syFreon:{t:"سيارة: أسعار الفريون", u:"https://syarah.com/carsguide/cars-air-conditioner-freon-prices/"},
+  syVarta:{t:"سيارة: بطاريات فارتا", u:"https://syarah.com/carsguide/varta-car-batteries/"},
+  syMobil:{t:"سيارة: كوبون Mobil", u:"https://syarah.com/products/oil/mobil-super-5w-30-6a0d5e3e9bb38ff2c4031e3a"},
+  tilBrembo:{t:"تلقا", u:"https://sa.tilga.com/prod/8954376/"},
+  tilPlugs:{t:"تلقا", u:"https://sa.tilga.com/en/prod/8963611/"},
+  toyGvpb:{t:"تويوتا (رسمي)", u:"https://www.toyota.com.sa/ar/offers/gvpb"},
+  toyGvpp:{t:"تويوتا (رسمي)", u:"https://www.toyota.com.sa/ar/offers/gvpp"},
+  amzAccent:{t:"أمازون", u:"https://www.amazon.sa/dp/B01EMA3XVG"},
+  murFreon:{t:"المربع", u:"https://www.almuraba.net/?p=881340"}
+};
+const CARS = [{id:"camry",n:"كامري ٢٠٢٠"},{id:"hilux",n:"هايلكس ٢٠٢٠"},{id:"accent",n:"أكسنت ٢٠٢٠"}];
+const JOBS = [{id:"oil",n:"زيت وفلتر"},{id:"brakes",n:"فحمات أمامية"},{id:"battery",n:"بطارية"},{id:"ac",n:"تعبئة فريون"},{id:"plugs",n:"بواجي"}];
+
+// status: full = verified fair total; parts = parts verified, labor unknown; none = no verified fit.
+// fair: [lo,hi] total incl. labor (estimate). partsRange: [lo,hi] parts only.
+const D = {
+ camry:{
+  oil:{status:"full", fair:[200,300], fairEst:true, partsRange:[160,280],
+   oem:[["32–70 ﷼","فلتر أصلي 90915-10009 (32 حراج، 70 أمازون)","haraj32"],["38 ﷼/لتر","زيت تويوتا 0W-20 (يحتاج نحو 4.4 لتر)"]],
+   alt:[["28.75 ﷼/لتر","Shell 0W-20"],["328 ﷼","Mobil 0W-20 كرتون 12 لتر"]],
+   dealer:[["199 ﷼","خدمة 10 آلاف كم","syCamry",["غير رسمي"]]],
+   svc:[["100–300 ﷼","نطاق عام لمراكز الزيت في الرياض","syOil"]]},
+  brakes:{status:"parts", partsRange:[190,276],
+   oem:[], alt:[["276 ﷼","Brembo P83172N (بديل 04465-33480)","tilBrembo"],["190 ﷼","فحمات سيراميك أمامية (حراج)"]],
+   dealer:[["566 ﷼","فحمات + خراطة + أجرة",null,["منتهي ٢٠٢٢"]]],
+   svc:[["100–400 ﷼","نطاق عام لتغيير الفحمات","syBrake"]]},
+  battery:{status:"parts", partsRange:[320,500], partsEst:true,
+   oem:[], alt:[["320–500 ﷼","فارتا (دليل أسعار، المقاس غير مؤكد)","syVarta"]], dealer:[], svc:[]},
+  ac:{status:"parts", partsRange:[30,240],
+   oem:[], alt:[["30–240 ﷼","علبة غاز R134a (نوع الغاز غير مؤكد للكامري)","murFreon"]], dealer:[],
+   svc:[["100–500 ﷼","نطاق عام للتعبئة (مقالات ٢٠٢٥)","syFreon"]]},
+  plugs:{status:"parts", partsRange:[115,225],
+   oem:[], alt:[["115 ﷼","طقم 4 إيريديوم","tilPlugs"],["199 ﷼","Champion طقم 4"],["225 ﷼","طقم في حراج شامل الشحن"]], dealer:[], svc:[]}
+ },
+ hilux:{
+  oil:{status:"full", fair:[205,349], fairEst:true, partsRange:[60,200],
+   oem:[["38–40 ﷼","فلتر YZZD2 (التوافق غير مؤكد)"],["334 ﷼","زيت تويوتا 10W-30 كرتون (≈28 ﷼/لتر)"]],
+   alt:[["30 ﷼","فلتر S1S"]],
+   dealer:[["349 ﷼","باقة الزيت الرسمية","toyGvpb",["لموديلات ٢٠١٨ وما قبل"]]],
+   svc:[["180 ﷼","كوبون Mobil 6 لتر (الفلتر غير مشمول)","syMobil"],["100–300 ﷼","نطاق عام","syOil"]]},
+  brakes:{status:"full", fair:[100,400], fairEst:true, partsRange:[90,550],
+   oem:[["546 ﷼","قطعة أصلية (جدول عام، الموديل غير محدد)"]], alt:[["90 ﷼","فحمات في حراج (التوافق غير مؤكد)"]],
+   dealer:[["749 ﷼","شامل خراطة الهوبات والأجرة والضريبة","toyGvpp",["حالي"]]],
+   svc:[["100–400 ﷼","نطاق عام لتغيير الفحمات","syBrake"]]},
+  battery:{status:"parts", partsRange:[200,500], partsEst:true,
+   oem:[], alt:[["200 ﷼","MF80D26L جديدة (حراج)"],["320–500 ﷼","فارتا (دليل أسعار)","syVarta"]], dealer:[], svc:[]},
+  ac:{status:"parts", partsRange:[30,240],
+   oem:[], alt:[["30–240 ﷼","علبة غاز R134a","murFreon"]], dealer:[], svc:[["100–500 ﷼","نطاق عام للتعبئة","syFreon"]]},
+  plugs:{status:"none", oem:[["76 ﷼/حبة","90919-01233 (التوافق غير مؤكد)"]], alt:[], dealer:[], svc:[]}
+ },
+ accent:{
+  oil:{status:"full", fair:[145,300], fairEst:true, partsRange:[35,65],
+   oem:[["35 ﷼","فلتر أصلي 26300-35505","amzAccent"]], alt:[["64 ﷼","فلتر Kefly (أغلى من الأصلي)"]],
+   dealer:[],
+   svc:[["120 ﷼","كوبون Mobil 4 لتر شامل الخدمة (بدون فلتر)","syMobil"],["100–300 ﷼","نطاق عام","syOil"]]},
+  brakes:{status:"parts", partsRange:[182,182],
+   oem:[], alt:[["182 ﷼","Bendix CFC2190 (التوافق مؤكد)"]],
+   dealer:[["240 ﷼","شامل الأجرة",null,["منتهي ٢٠١٩","الجيل السابق"]]],
+   svc:[["100–400 ﷼","نطاق عام لتغيير الفحمات","syBrake"]]},
+  battery:{status:"none", oem:[], alt:[["240–320 ﷼","VARTA Blue (دليل أسعار، ليس متجراً)","syVarta"]], dealer:[], svc:[]},
+  ac:{status:"parts", partsRange:[150,150],
+   oem:[], alt:[["150 ﷼","علبة غاز 1 كجم (حراج)"]], dealer:[], svc:[["100–500 ﷼","نطاق عام للتعبئة","syFreon"]]},
+  plugs:{status:"none", oem:[["79–120 ﷼","موبيس (الكمية والتوافق غير واضحين)"]], alt:[["79 ﷼","NGK إيريديوم (غالباً للحبة)"]], dealer:[], svc:[]}
+ }
+};
+
+let car="camry", job="oil";
+const $=s=>document.querySelector(s);
+const fmt=n=>Math.round(n).toLocaleString("ar-SA");
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+
+function chips(el,list,cur,on){
+  el.innerHTML="";
+  list.forEach(x=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=x.n;
+    b.setAttribute("aria-pressed",x.id===cur);b.onclick=()=>on(x.id);el.appendChild(b)});
+}
+function items(arr){
+  if(!arr.length) return '<span class="none">غير متوفر حالياً</span>';
+  return arr.map(([p,d,s,flags])=>{
+    const src=s&&S[s]?`<a class="src" href="${S[s].u}" target="_blank" rel="noopener">${esc(S[s].t)}</a>`:"";
+    const fl=(flags||[]).map(f=>`<span class="flag ${/منتهي/.test(f)?"old":""}">${esc(f)}</span>`).join("");
+    return `<div class="item"><span class="price">${esc(p)}</span><span class="desc">${esc(d)}</span>${fl}${src}</div>`;
+  }).join("");
+}
+function render(){
+  chips($("#cars"),CARS,car,id=>{car=id;render();});
+  chips($("#jobs"),JOBS,job,id=>{job=id;render();});
+  const r=D[car][job], cn=CARS.find(c=>c.id===car).n, jn=JOBS.find(j=>j.id===job).n;
+  const pill = r.status==="full"?'<span class="pill good">سعر عادل موثّق</span>':r.status==="parts"?'<span class="pill warn">القطع موثّقة · الأجرة غير معروفة</span>':'<span class="pill bad">بيانات غير كافية</span>';
+  let fair;
+  if(r.status==="full") fair=`<div class="fair"><span class="lbl">السعر العادل للشغلة كاملة</span><span class="num">${fmt(r.fair[0])}–${fmt(r.fair[1])} <small>﷼</small></span><span class="note">${r.fairEst?"تقدير مبني على أسعار منشورة موثّقة":""}</span></div>`;
+  else if(r.status==="parts") fair=`<div class="fair"><span class="lbl">سعر القطع وحدها</span><span class="num">${r.partsRange[0]===r.partsRange[1]?fmt(r.partsRange[0]):fmt(r.partsRange[0])+"–"+fmt(r.partsRange[1])} <small>﷼ + الأجرة</small></span><span class="note">${r.partsEst?"تقدير من دليل أسعار. ":""}أجرة اليد غير منشورة، وسنجمعها من فواتير المستخدمين.</span></div>`;
+  else fair=`<div class="fair"><span class="lbl">ما عندنا سعر موثّق يناسب هذي السيارة بعد</span><span class="note">نحتاج تأكيد رقم القطعة برقم الهيكل (VIN) قبل ما نعطيك رقم.</span></div>`;
+  $("#result").innerHTML=`<div class="result-head"><h2>${esc(jn)} · ${esc(cn)}</h2>${pill}</div>${fair}
+   <div class="rows">
+    <div class="row"><div class="k">قطع أصلية</div><div class="v">${items(r.oem)}</div></div>
+    <div class="row"><div class="k">قطع تجارية</div><div class="v">${items(r.alt)}</div></div>
+    <div class="row"><div class="k">الوكالة</div><div class="v">${items(r.dealer)}</div></div>
+    <div class="row"><div class="k">مراكز الخدمة</div><div class="v">${items(r.svc)}</div></div>
+   </div>`;
+  $("#verdict").hidden=true;
+}
+
+function check(q){
+  const r=D[car][job], v=$("#verdict");
+  if(!(q>0)){v.className="verdict info";v.textContent="اكتب المبلغ اللي عُرض عليك بالريال.";v.hidden=false;return}
+  let cls="info",msg;
+  if(r.status==="full"){
+    const [lo,hi]=r.fair;
+    if(q<lo*0.85){cls="warn";msg=`عرضك ${fmt(q)} ﷼ أقل من المعتاد (${fmt(lo)}–${fmt(hi)}). تأكد من نوع القطعة ودرجة الزيت قبل ما توافق.`}
+    else if(q<=hi){cls="good";msg=`عرضك ${fmt(q)} ﷼ ضمن السعر العادل (${fmt(lo)}–${fmt(hi)}). سعر معقول.`}
+    else if(q<=hi*1.25){cls="warn";msg=`عرضك ${fmt(q)} ﷼ أعلى قليلاً من السعر العادل بـ${fmt((q/hi-1)*100)}٪. تقدر تفاصل.`}
+    else{cls="bad";msg=`عرضك ${fmt(q)} ﷼ أعلى من السعر العادل بـ${fmt((q/hi-1)*100)}٪ (الأعلى المعتاد ${fmt(hi)} ﷼). اسأل عن تفصيل القطعة والأجرة أو جرّب مكان ثاني.`}
+  } else if(r.status==="parts"){
+    const [plo,phi]=r.partsRange; const lab=[Math.max(0,q-phi),Math.max(0,q-plo)];
+    cls= lab[0]>400?"bad":"info";
+    msg=`القطع وحدها ${plo===phi?fmt(plo):fmt(plo)+"–"+fmt(phi)} ﷼. يعني عرضك ${fmt(q)} ﷼ فيه أجرة تقريباً ${lab[0]===lab[1]?fmt(lab[0]):fmt(lab[0])+"–"+fmt(lab[1])} ﷼. ما عندنا سعر أجرة موثّق بعد لنحكم عليها.`;
+  } else { msg=`ما عندنا بيانات كافية لهذي الشغلة على ${CARS.find(c=>c.id===car).n} بعد. احفظ الفاتورة، وبنحتاجها لاحقاً.`}
+  v.className="verdict "+cls; v.textContent=msg; v.hidden=false;
+}
+$("#checkBtn").onclick=()=>check(parseFloat($("#quote").value));
+$("#quote").addEventListener("keydown",e=>{if(e.key==="Enter")check(parseFloat(e.target.value))});
+
+render();
+
+// Smart input via Claude (hidden when unavailable)
+(async()=>{
+  if(!window.claude) return;
+  let sample=null; try{sample=await window.claude.use("sample")}catch(e){}
+  if(!sample) return;
+  $("#askCard").hidden=false;
+  const btn=$("#askBtn"), hint=$("#askHint");
+  btn.onclick=async()=>{
+    const text=$("#askText").value.trim();
+    if(!text){hint.textContent="اكتب وصف المشكلة أولاً.";return}
+    btn.disabled=true; hint.textContent="أحاول أفهمها...";
+    const prompt=`أنت مساعد في تطبيق سعودي لأسعار صيانة السيارات. حلّل وصف المستخدم (بالعامية السعودية) وأرجع JSON فقط بهذا الشكل:
+{"car":"camry|hilux|accent|unknown","job":"oil|brakes|battery|ac|plugs|unknown","quote":رقم أو null,"note":"جملة قصيرة بالعامية تشرح الاحتمال الأقرب للمشكلة"}
+السيارات المتاحة: camry=تويوتا كامري، hilux=تويوتا هايلكس، accent=هيونداي أكسنت.
+الشغلات: oil=تغيير زيت وفلتر، brakes=فحمات فرامل أمامية (صفير أو صوت عند الفرامل)، battery=بطارية (السيارة ما تشتغل أو تشغيل ضعيف)، ac=تعبئة فريون (المكيف يطلع هوا حار)، plugs=بواجي (رجّة أو تقطيع في المحرك).
+quote = المبلغ الذي ذكر المستخدم أن الورشة طلبته بالريال، وإلا null.
+وصف المستخدم: """${text.slice(0,500)}"""`;
+    try{
+      const out=await sample.json(prompt,{modelTier:"quick"});
+      let changed=false;
+      if(out&&D[out.car]){car=out.car;changed=true}
+      if(out&&JOBS.some(j=>j.id===out.job)){job=out.job;changed=true}
+      render();
+      hint.textContent=(out&&out.note?out.note+" ":"")+(changed?"":"ما قدرت أحدد السيارة أو الشغلة، اختارها من تحت.");
+      if(out&&typeof out.quote==="number"&&out.quote>0){$("#quote").value=out.quote;check(out.quote)}
+    }catch(e){
+      hint.textContent = e&&e.code==="not_granted"?"الميزة غير مفعّلة. اختر السيارة والشغلة من تحت.":"ما قدرت أفهمها الحين، اختر السيارة والشغلة من تحت.";
+      if(e&&e.code==="not_granted") $("#askCard").hidden=true;
+    }finally{btn.disabled=false}
+  };
+})();
+</script>
